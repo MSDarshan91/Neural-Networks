@@ -41,25 +41,17 @@ for no_centers=2:20
     weights = pinv(phi)*cancerTargets(t_set,:);
     y_train = phi*weights;
     for j =1:train_len
-        if( y_train(j,1) > y_train(j,2))
-            y_train(j,1) = 1;
-            y_train(j,2) = 0;
-        else
-            y_train(j,1) = 0;
-            y_train(j,2) = 1;
-        end
+       m = find(y_train(j,:)==max(y_train(j,:)));
+       y_train(j,:) = 0;
+       y_train(j,m) = 1;
     end
     accuracy_train = sum(y_train(:,1) == cancerTargets(t_set,1));
     fprintf('Prediction accuracy on Train set %f\n',accuracy_train*100/train_len);
     y_test = phi_test*weights;
     for j =1:test_len
-        if( y_test(j,1) > y_test(j,2))
-            y_test(j,1) = 1;
-            y_test(j,2) = 0;
-        else
-            y_test(j,1) = 0;
-            y_test(j,2) = 1;
-        end
+       m = find(y_test(j,:)==max(y_test(j,:)));
+       y_test(j,:) = 0;
+       y_test(j,m) = 1;
     end
     accuracy_test = sum(y_test(:,1) == cancerTargets(te_set,1));
     fprintf('Prediction accuracy on Test set %f\n',accuracy_test*100/test_len);
